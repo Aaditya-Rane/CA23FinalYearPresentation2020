@@ -1,0 +1,1139 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>CA23 Final Year Presentation</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/serif.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!-- Loading P5 Libraries -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/addons/p5.sound.min.js"></script>
+		
+		<!-- Loading script -->
+		<script src="js/sketch.js"></script> 
+
+		<!-- Loading JQuery-->
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section style="color: black;" data-state="non_demo_display_state1">
+					<h3>TABLE TENNIS BALL TRAJECTORY PREDICTION</h3>
+					<br><br>
+					<div style="float: left; text-align: left;">
+						<h4>Project Guide</h4>
+							<div style=" font-size: 30px; ">
+								<p>Prof. Kavita Shirsat</p>
+							</div>
+					</div>
+					<div style="float: right; text-align: right;">
+						<h4>Group Members</h4>
+							<div style=" font-size: 30px; ">
+								<p>Aaditya Rane ( 16102A0066 )</p>
+								<p>Kalpak Tole (16102A0060) </p>
+								<p>Aishwarya Pardeshi (17102A2007)</p>
+							</div>
+					</div>
+				</section>
+				<section data-state="non_demo_display_state2">	
+					<h3>EXISTING VS CURRENT</h3>
+					<table>
+						<style>
+							td,th{
+								width: 50%;
+								
+							};
+						</style>
+						<thead>
+							<tr>
+								<th> Existing work </th>
+							    <th> Current work </th>
+							</tr>
+						</thead>
+						<tbody style="font-size: 23px;">
+							<tr>
+								<td> Require to use high-speed tracking vision system that increase the system cost. </td>
+								<td> Require 2 moderate quality camera systems which could be able to recoard at 60 FPS.  </td>
+							</tr>
+							<tr>
+								<td> usess color based ball detection approachs and some times try to observe state using tracking marks on the ball. </td>
+								<td> usess convolution neural network based YOLO ( You Only Look Once ) algorithm, to increase the accuracy of ball detection. </td>
+							</tr>
+							<tr>
+								<td> usess polynomial fitting and mathamatical equations to predict the trajectory of ball. Unable to predict complex trajectories. </td>
+								<td> usess lstm - recurrent neural network based trajectory prediction model to generalize it as human brain. </td>
+							</tr>
+							
+						</tbody>
+					</table>
+					<br>
+					<div style="font-size: 25px; text-align: justify;">
+						<b>Note:</b> Even though it definitely not at fast as human learning, the proposed system gets adapt over the amount of provided data, even though it is not live time adapting due to real time processing complexity, model can evolve based on the given data for training.
+					</div>
+					
+				</section>
+				<section data-state="non_demo_display_state3">
+					<section>
+						<h3> Table Tennis Specification </h3>
+						<h4><b>Table Tennis Ball / Ping-pong Ball </b></h4>
+						
+						<div >
+							<div style="width: 50%; float: left;">
+								<img style="border: none;" src="images\initial setup\ball.PNG"> 
+							</div>
+							<div style="width: 50%; float: left; font-size: 25px;">
+								<table>
+									<thead>
+									<tr>
+										<th> Parameters </th>
+										<th> Specification </th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td> Top Speed </td>
+											<td> 6 m/s ~ 12 mph </td>
+										</tr>
+										<tr>
+											<td> Diameter </td>
+											<td> 40 mm </td>
+										</tr>
+										<tr>
+											<td> Circumference </td>
+											<td> 125.6 mm </td>
+										</tr>
+										<tr>
+											<td> Weight </td>
+											<td> 2.7 g </td>
+										</tr>
+										<tr>
+											<td> Materail </td>
+											<td> Polymer </td>
+										</tr>
+										<tr>
+											<td> Colour </td>
+											<td> White or Orange </td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+					<section data-state="non_demo_display_state4">
+						<h3> Table Tennis Specification </h3>
+						<h4><b>Table Tennis Table </b></h4>
+						<div style="width: 100%; float: left;">
+							<div style="width: 50%; float: left;">
+								<img style="border: none;" src="images\initial setup\table1.PNG"> 
+							</div>
+							<div style="width: 50%; float: left; font-size: 25px;">
+								<br>
+								<table>
+									<thead>
+									<tr>
+										<th> Parameters </th>
+										<th> Specification </th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td> Height (table) </td>
+											<td> 76 cm </td>
+										</tr>
+										<tr>
+											<td> Height (net) </td>
+											<td> 15.25 cm </td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<br>
+						<div style="width: 100%; float:left;">
+							<div style="width: 50%; float: left; font-size: 25px;">
+								<br><br>
+								<table>
+									<thead>
+									<tr>
+										<th> Parameters </th>
+										<th> Specification </th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td> Height (table) </td>
+											<td> 76 cm </td>
+										</tr>
+										<tr>
+											<td> Height (net) </td>
+											<td> 15.25 cm </td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div style="width: 50%; float: left;">
+								<img style="border: none;" src="images\initial setup\table2.PNG"> 
+							</div>
+						</div>
+					</section>
+					<section data-state="non_demo_display_state5">
+						<h3>Camera Specification</h3>
+						<div >
+							<div style="width: 40%; float: left;">
+								<img style="border: none;" src="images\initial setup\camera1.PNG"> 
+							</div>
+							<div style="width: 60%; float: left; font-size: 25px;">
+								<table>
+									<thead>
+									<tr>
+										<th> Parameters </th>
+										<th> Specification </th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td> Model Name </td>
+											<td> Noise Play SE </td>
+										</tr>
+										<tr>
+											<td> Item Weight </td>
+											<td> 354 g </td>
+										</tr>
+										<tr>
+											<td> Product Dimension </td>
+											<td> 5.9 x 4.1 x 2.1 cm </td>
+										</tr>
+										<tr>
+											<td> Memory Capacity </td>
+											<td> 64 GB </td>
+										</tr>
+										<tr>
+											<td> Lens Specification </td>
+											<td> Wide Angle <br> (100 - degree FOV) </td>
+										</tr>
+										<tr>
+											<td> Features </td>
+											<td> 1080 x 1920 | 60 fps <br> 1080 x 720 | 120 fps </td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section data-state="non_demo_display_state6">
+					<section>
+						<h3> Camera Positioning </h3>
+						<div style="width: 50%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="border: none" src="images\initial setup\camera_position_setup.PNG">
+							</div>
+							<div style="width: 100%; float:left; font-size: 20px;">
+								<table>
+									<thead>
+										<tr>
+											<th> Left Camera Position </th>
+											<th> Right Camera Position </th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>(X: 87 | Y: 77 | Z: 194)</td>
+											<td> (X: 187 | Y: 77 | Z: 194)</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div style=" border-left:gray; border-style: double; width: 40%; padding-left: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\initial setup\left_camera_view.jpg">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Left Camera View</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Right Camera View</h6>
+								<img style="width: 70%; float: left; border: none" src="images\initial setup\right_camera_view.jpg">
+							</div>
+							<div style="width: 100%; float:left;">
+								<br>
+							</div>
+							
+							<h6 style="font-size: 20px; text-align: left;"><b>Note:</b> Table Tennis Table should be visible from both cameras</h6>
+						</div>
+					</section>
+					<section>
+						<h3> Camera Position </h3>
+						<div style="width: 100%; float:left;">
+							<div style="width: 50%; float:left;">	
+								<img style="border:none;" src="images\initial setup\camera_placement1.jpg">
+								<h6 style="font-size: 25px;">Camera mounting position</h6>
+							</div>
+							<div style="width: 50%; float:left;">	
+								<img style="border:none;" src="images\initial setup\camera_placement2.jpeg">
+								<h6 style="font-size: 25px;">Actual Camera mount</h6>
+							</div>
+						</div>
+						
+						<div style="font-size:25px;">
+							<p>Long White Box : Contains Camera ||
+							Small White Box : Contains PowerBank</p>
+							<p><b>Note:</b> Power bank of ( 10,000 mah )  is  used to allow cameras to be able to record for longer duration.</p>
+						</div>
+					</section>
+					<section >
+						<h3> Complete Setup </h3>
+						
+						<img style="border:none" src="images\initial setup\camera_placement_play.jpeg">
+						<h4> Dataset collection scene </h4>
+					</section>
+					
+				</section>
+				<section data-state="non_demo_display_state7">
+					<section>
+					<h3>Dataset Collection Details</h3>
+						<div style="text-align: left; font-size: 30px;">
+							<ul>						
+								<li> Raw dataset has been collected in batchess of 5 mins to avoid overheating of camera and keep buffer between vidoes to avoid data loss. </li>
+								<br>
+								<li> Both Cameras are equipped with 16 GB memory card which are able to record footage for around 50 mins. </li>
+								<br>
+								<li> After 50 mins of recoarding data is transfered to hard disk using built in WIFI. </li>	
+							</ul>
+						</div>
+					</section>
+					<section>
+						<h3>Dataset Collection Details</h3>
+						<div style="text-align: left; font-size: 30px;">
+							<ul>
+								<li> Further preprocessing and ball detection algorithm are applied on this raw dataset, then it is divided into set of trajectories based on the two criteria which are as follows: 
+									<ol>
+										<br>
+										<li> If ball is not visible in frame for more than 20 consecutive frames.  </li>
+										<br>
+										<li>If ball's direction of motion suddenly gets opposed along the x axis (axis with table's length) with the assumption that, this can only happen if someone has hit the ball.    </li>
+									</ol>
+								</li>
+							</ul>
+							<p><b>Note:</b> Above filteration process happens automatically.</p>
+						</div>
+					</section>
+					
+					<section>
+						<h3>Dataset Collection Details</h3>
+						<div style="text-align: left; font-size: 30px;">
+							<ul>
+								<li> After automated filtering of dataset, further manual filtering is done to avoid the following false trajectories in dataset.
+									<ol>
+										<br>
+										<li> If someone hits the ball outside the table from the side of the table; </li>
+										<br>
+										<li> If a ball hits the net and falls right there itself would be considered as a valid trajectory as it is moving in same direction. </li>
+										<br>
+										<li> If someone hits the ball over the height of the camera - only half of the trajectory has got recorded in this case. </li>
+									</ol>
+								</li>
+							</ul>
+							<p><b>Note:</b> Now, these filtered trajectories can be used for training purpose. All these processes will be discussed in detail in further.</p>
+						</div>
+					</section>
+				</section>
+				<section data-state="non_demo_display_state8">
+					<section>
+						<h3>Image Preprocessing</h3>
+						<h4> Distortion Removal </h4>
+						<div style=" border-right:gray; border-style: double; width: 50%; padding-right: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\initial setup\left_camera_view.jpg">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Left Camera View</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Right Camera View</h6>
+								<img style="width: 70%; float: left; border: none" src="images\initial setup\right_camera_view.jpg">
+							</div>
+						</div>
+						<div style="width: 45%; float:left; padding-left: 3%;">
+							
+							<div style="font-size: 20px; text-align: justify;">
+								<p > Distortions can cause problem in getting actual 3D position of a ball, so first we need to remove these distortions. There are two major distortions which are generally observed in any camera.  </p>
+								<ul>
+									<li>
+										<b>Radial Distortion : </b><br>
+										In this type of distortion straight lines appeared curved. This mostly observed in wide angle (in over case 100 – FOV) cameras.
+									</li>
+									<br>
+									<li>
+										<b>Tangential Distortion: </b><br>
+										This type of distortion is seen when lens is not aligned perfectly parallel to imaging plane. So, areas in the images look nearer than expected. 
+									</li>
+								</ul>
+								
+							</div>
+						</div>
+					</section>
+					<section data-state="non_demo_display_state9">
+						<h3> Image Preprocessing </h3>
+						<h4> Distortion Removal </h4>
+						<div style=" border-right:gray; border-style: double; width: 50%; padding-right: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\image preprocessing\chess_board1.jpg">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Sample Chess Board View1</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Sample Chess Board View2</h6>
+								<img style="width: 70%; float: left; border: none" src="images\image preprocessing\chess_board2.jpg">
+							</div>
+						</div>
+						<div style="width: 45%; float:left; padding-left: 3%;">
+							<div style="font-size: 20px; text-align: justify;">
+								<p>
+									Radial Correction equations :<br>
+									Xcorrected = x (1 + k<sub>1</sub>r<sup>2</sup> + k<sub>2</sub>r<sup>4</sup> + k<sub>3</sub>r<sup>6</sup>)<br>
+									Ycorrected = y (1 + k<sub>1</sub>r<sup>2</sup> + k<sub>2</sub>r<sup>4</sup> + k<sub>3</sub>r<sup>6</sup>)
+								</p>
+
+								<p> 
+									Tangential Correction equations :<br> 
+									Xcorrected = x + [ 2p<sub>1</sub>xy + p<sub>2</sub>(r<sup>2</sup>+2x<sup>2</sup>)]<br>
+									Ycorrected = y + [ p<sub>1</sub>(r<sup>2</sup>+2y<sup>2</sup>) + 2p<sub>2</sub>xy]
+								</p>
+								<p> 
+									By combining both equations we get get:
+									<li>Distortion Cofficients : ( k<sub>1</sub>, k<sub>2</sub>, p<sub>1</sub>, p<sub>2</sub>, p<sub>3</sub> )<br></li>
+									<li>Camera Matrix :<br>
+									<table style="width: 30%;">
+										<tr>
+											<td> fx </td>
+											<td> 0 </td>
+											<td> cx </td>
+										</tr>
+										<tr>
+											<td> 0 </td>
+											<td> fy </td>
+											<td> cy </td>
+										</tr>
+										<tr>
+											<td> 0 </td>
+											<td> 0 </td>
+											<td> 1 </td>
+										</tr>
+									</table>
+									</li>
+								</p>
+							</div>
+						</div>
+					</section>
+					<section data-state="non_demo_display_state10">
+						<h3> Image Preprocessing </h3>
+						<h4> Distortion Removal </h4>
+						<div style=" border-right:gray; border-style: double; width: 49%; padding-right: 1%; float:left;">
+							Before preprocessing
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\image preprocessing\left_raw.png">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Left camera raw view</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Right camera raw view</h6>
+								<img style="width: 70%; float: left; border: none" src="images\image preprocessing\right_raw.png">
+							</div>
+						</div>
+						<div style="width: 48%; padding-left: 1%; float:left;">
+							After preprocessing
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\image preprocessing\left_fisheye.png">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Left camera new view</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Right Camera new view</h6>
+								<img style="width: 70%; float: left; border: none" src="images\image preprocessing\right_fisheye.png">
+							</div>
+						</div>
+					</section>
+				</section>
+				<section data-state="non_demo_display_state11">
+					<section>
+						<h3> Image Preprocessing </h3>
+						<h4> Projective Transformation </h4>
+						<div style="border-right:gray; border-style: double; width: 49%; padding-right: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\image preprocessing\left_fisheye.png">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Left camera new view</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Right Camera new view </h6>
+								<img style="width: 70%; float: left; border: none" src="images\image preprocessing\right_fisheye.png">
+							</div>
+						</div>
+						<div style=" width: 48%; padding-left: 1%; float:left;">
+							
+							<h4 style="font-size: 30px;"> Need of Projective Transformation </h4>
+							<p style="font-size: 20px; text-align: justify;">Since the table position is not static, it can be change by little push from any player. Also, we can’t always expect that table will be at exact position every day when we start recording. So, there is need of dynamic system, which would be able to locate position of ball with respect to table’s upper left corner irrespective of table position in space, provided that table is clearly visible through both cameras. So, the solution is applying projective transformation on four corners of the table.</p>
+						</div>
+					</section>
+					<section>
+						<h3> Image Preprocessing </h3>
+						<h4> Projective Transformation </h4>
+						<div style=" border-right:gray; border-style: double; width: 49%; padding-right: 1%; float:left;">
+							Before preprocessing
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\image preprocessing\left_fisheye.png">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Left camera new view</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Right camera new view</h6>
+								<img style="width: 70%; float: left; border: none" src="images\image preprocessing\right_fisheye.png">
+							</div>
+						</div>
+						<div style="width: 48%; padding-left: 1%; float:left;">
+							After preprocessing
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\image preprocessing\left_projective.png">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Left camera final view</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Right Camera final view</h6>
+								<img style="width: 70%; float: left; border: none" src="images\image preprocessing\right_projective.png">
+							</div>
+						</div>
+					</section>
+				</section>
+				<section data-state="non_demo_display_state12">
+					<section>
+						<h3> Ball Detection </h3>
+						<div style="font-size: 30px; text-align: justify;">					
+							<p> Ball detection can be achieved by simple white or yellow colour filter. But since camera which is used are of moderate quality, sometimes ball appears as a strip of while colour instead of white circle. So, in order to make sure ball is getting detected in each frame YOLO (YOU ONLY LOOK ONCE) algorithm is used. We will be using yolov3-tiny version of that algorithm. YOLO usess convolution neural network model in its architecture. It is real time object detection. </p>
+							
+						</div>
+					</section>
+					<section>
+						<h3> Ball Detection Model</h3>
+						<h4> Training Specification ( dataset )</h4>
+
+						<div style=" border-right:gray; border-style: double; width: 49%; padding-right: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\ball detection\raw.jpg">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>raw camera images</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br> Distortion removed images </h6>
+								<img style="width: 70%; float: left; border: none" src="images\ball detection\new.jpg">
+							</div>
+						</div>
+						<div style="width: 48%; padding-left: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\ball detection\final.jpg">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Projective transformed images</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Random noise images</h6>
+								<img style="width: 70%; float: left; border: none" src="images\ball detection\random.jpg">
+							</div>
+						</div>
+						<div style="width: 100%; float:left; text-align: justify;">
+							<p style="font-size: 20px; "><b>Note: </b>Dataset consists of mannually labelled 8000+ images and model is trained for 16000+ epochs for optimal results. Those images are labelled as:<br> (class no., x of upper left of box, y of upper left of box, width of the box, height of the box) </p>
+						</div>
+					</section>
+					<section>
+						<h3> Ball Detection Model</h3>
+						<h4> Ball detection in working</h4>
+							<div style="width: 50%; float:left;">
+								<video playsinline autoplay muted loop>
+									<source src="images\ball detection\left_ball_detection.mp4" type="video/mp4">
+								</video>
+								<p style="font-size: 30px;" >Left Camera Final View</p>
+							</div>
+							<div style="width: 50%; float:left;">
+								<video playsinline autoplay muted loop>
+									<source src="images\ball detection\right_ball_detection.mp4" type="video/mp4">
+								</video>
+								<p style="font-size: 30px;" >Right Camera Final View</p>
+							</div>
+					</section>
+				</section>
+				<section data-state="non_demo_display_state13">
+					<section>
+						<h3> Three - Dimensional Mapping </h3>
+						<h4> Input for 3-dimensional mapping</h4>
+						<div >
+							<div style="width: 50%; float: left;">
+								<img style="border: none;" src="images\3d_mapping\3_mapping_figure.PNG"> 
+							</div>
+							<div style="width: 50%; float: left; font-size: 15px;">
+								<table>
+									<style> 
+									
+									</style>
+
+									<thead>
+									<tr>
+										<th id='a'> Parameters </th>
+										<th id='b'> Specification </th>
+									</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td id = 'a'> RCBSP </td>
+											<td id = 'b'> 
+												Right Camera Ball Shadow Position
+												(Position where ball is visible in image take from left camera and z = 0 as shadow is on table)
+											</td>
+										</tr>
+										<tr>
+											<td id = 'a'> LCBSP </td>
+											<td id = 'b'> 
+												Left Camera Ball Shadow Position 
+												(Position where ball is visible in image taken from right camera and z = 0 as shadow on the table)
+											</td>
+										</tr>
+										<tr>
+											<td id = 'a'> LC </td>
+											<td id = 'b'> 
+												Left Camera Position
+												(z = height of left camera from surface of the table)
+											</td>
+										</tr>
+										<tr>
+											<td id = 'a'> RC </td>
+											<td id = 'b'> 
+												Right Camera Position
+												(z = height of right camera from surface of the table)
+											</td>
+										</tr>
+										<tr>
+											<td id = 'a'> IP </td>
+											<td id = 'b'> 
+												Intersection Point
+												(actual position of a ball in 3d space)
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+						<div style="width: 100%; float:left; text-align: justify;">
+							<p style="font-size: 20px; ">
+								<b>Note: </b>Using above algorithm, we will get actual 3d position of a ball so, we can represent any ball as,
+							</p> 
+							<p style="text-align: center; font-size: 25px;">
+								[ x: along length (cm), y: along breath(cm), z: along height(cm)]
+							</p>
+						</div>
+						
+					</section>
+					<section>
+						<h3> Three - Dimensional Mapping </h3>
+						<h4> Camera center Transformation </h4>
+						<div style=" border-right:gray; border-style: double; width: 49%; padding-right: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\3d_mapping\left_raw.jpg">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br>Left camera center in raw image</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br> Right camera center in raw image </h6>
+								<img style="width: 70%; float: left; border: none" src="images\3d_mapping\right_raw.jpg">
+							</div>
+						</div>
+						<div style="width: 48%; padding-left: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\3d_mapping\left_shifted.jpg">
+								<h6 style="width: 30%; float:left; font-size: 30px;">Left camera center in shifted image</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;">Right camera center in shifted image</h6>
+								<img style="width: 70%; float: left; border: none" src="images\3d_mapping\right_shifted.jpg">
+							</div>
+						</div>
+						<div style="width: 100%; float:left; text-align: justify;">
+							<p style="font-size: 20px; "><b>Note: </b>To calculate camera centre position, first note the centre position of image (1920 / 2, 1080 / 2) and then apply image pre-processing transformations (distortion removal and projective transformation) on that centre of the image, it will give you new camera positions. </p>
+						</div>
+					</section>
+					<section>
+						<h3> Three - Dimensional Mapping </h3>
+						<h4> Problems with three-dimensional mapping </h4>
+						<div style="text-align: justify; font-size: 25px;">
+							<p> During ball detection bounding box drawn for the ball might not be perfectly accurate. Because,   </p>
+							<ul>
+								<li>
+									Dataset which is used for training ball detection algorithm are manually labelled, causing small error in prediction.
+								</li>
+								<br>
+								<li>
+									Since image captured from camera shows as white strip of the ball instead of a perfectly round ball, this might result into giving inaccurate actual position.
+								</li>
+								<br>
+								<li>
+									Both cameras are not in sync with each other, as it is hard to make sure both cameras are completely in sync, here, only +8 or -8 milliseconds of difference is allowable. 
+								</li>
+								<br>
+								<li>
+									Also, sometimes camera frames get dropped result into missing datapoint.
+								</li>
+							</ul>
+						</div>
+					</section>
+				</section>
+				<section data-state="non_demo_display_state14">
+					<section>
+						<h3>Initial Trajectory Detection</h3>
+						<div style="font-size: 25px; text-align: justify;">
+							<p>
+								As we saw previously discussed about problems with 3D mapping algorithm. These problems cause slight distortion in trajectory of the ball. But, for dataset we need smooth out trajectory, to smooth out our trajectory follow the following steps,
+							</p>
+							<ol>
+								<li>
+									Break the trajectory at the point where it touch the table. Ideally there can be three cases,
+								</li>
+								<ol>
+									<li>
+										Double impact ( at the time of servicing )
+									</li>
+									<li>
+										Single impact ( at the time of returning i.e some hits the ball from other side )
+									</li>
+									<li>
+										Direct ( no impact on the table )
+									</li>
+								</ol>
+								<br>
+								<li>
+									Fit the 3 degree polygon curve ( polyfit ) through those data point with 4th variable of time.
+								</li>
+							</ol>
+						</div>
+					</section>
+					<section>
+						<h3>Initial Trajectory Detection</h3> 
+						<h4>Need of polyfitting</h4>
+						<h5 style="font-size: 25px;" > Missing Datapoints</h5>
+						<table style="font-size: 20px; width: 100%; table-layout: fixed ;">
+							<style>
+								td {
+									width: 5% ;
+								}
+							</style>
+							<tr>
+								<td style="width: 50%;">Time</td>
+								<td>0</td>
+								<td>4</td>
+								<td>8</td>
+								<td>12</td>
+								<td>16</td>
+								<td>20</td>
+								<td>24</td>
+								<td>28</td>
+								<td>32</td>
+								<td>36</td>
+								<td>40</td>
+								<td>44</td>
+								<td>48</td>
+								<td>52</td>
+								<td>56</td>
+								<td>60</td>
+								<td>64</td>
+								<td>68</td>
+								<td>72</td>
+								<td>76</td>
+								
+							</tr>
+							<tr>
+								<td style="width: 50%;">Left</td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								
+							</tr>
+							<tr>
+								<td style="width: 50%;">Right</td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								<td style="background-color: red;"></td>
+								<td style="background-color: red;"></td>
+								<td style="background-color: red;"></td>
+								<td></td>
+								<td></td>
+								<td>F</td>
+								<td></td>
+								<td></td>
+								
+							</tr>
+						</table>
+						<br>
+						<h5 style="font-size: 25px;" > Small differnece in FPS </h5>
+						<table style="font-size: 20px; width: 100%;">
+							<style>
+							  td {
+								width: 25% ;
+								
+							  }
+							</style>
+							<tr>
+								<td>
+									Frame Number
+								</td>
+								<td>
+									Left Camera Time<br> (59.2 fps)
+								</td>
+								<td>
+									Right Camera Time<br> (59.8 fps)
+								</td>
+								<td>
+									Time Difference in Frames
+								</td>
+							</tr>
+							
+							<tr>
+								<td>0</td>
+								<td>0 ms</td>
+								<td>0 ms</td>
+								<td>0 ms</td>
+							</tr>
+							<tr>
+								<td>100</td>
+								<td>1619 ms</td>
+								<td>1672 ms</td>
+								<td>53 ms</td>
+							</tr>
+							<tr>
+								<td>1000</td>
+								<td>16891 ms</td>
+								<td>16722 ms</td>
+								<td>169 ms</td>
+							</tr>
+							<tr>
+								<td>10000</td>
+								<td>161918 ms</td>
+								<td>167224 ms</td>
+								<td>5306 ms</td>
+							</tr>
+						</table>
+
+					</section>
+					<section>
+						<h3> Initial Trajectory Detection </h3>
+						
+						<div style=" border-right:gray; border-style: double; width: 49%; padding-right: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\inital trajectories\single_raw.png">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br><br>Single Bounce Observed</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br><br> Double Bounce Observed </h6>
+								<img style="width: 70%; float: left; border: none" src="images\inital trajectories\double_raw.png">
+							</div>
+						</div>
+						<div style="width: 48%; padding-left: 1%; float:left;">
+							<div style="width: 100%; float:left;">
+								<img style="width: 70%; float: left; border: none; " src="images\inital trajectories\single_smooth.png">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br><br>Single Bounce smooth</h6>
+							</div>
+							<div style="width: 100%; float:left;">
+								<h6 style="width: 30%; float:left; font-size: 30px;"><br><br>Double Bounce Smooth</h6>
+								<img style="width: 70%; float: left; border: none" src="images\inital trajectories\double_smooth.png">
+							</div>
+						</div>
+					</section>
+				</section>
+				<section data-state="non_demo_display_state15">
+					<section>
+						<h3> Trajectory Prediction </h3>
+						<table style="font-size: 18px;">
+							<tr>
+								<td style="font-size: 25px;">
+									<b>Algorithm Input</b>
+								</td>
+								<td style="font-size: 25px;">
+									<b>Alogrithm Output</b>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Ten ball positions of smooth of trajectory as,<br> 
+									Initial Trajectory:<br> (x1, y1, z1, t1), ( x2, y2, z2, t2),..( x10, y10, z10, t10)<br> where,<br> 
+									If t1 = T – 100 milliseconds<br> then t10 = T milliseconds<br> ( T represents current time ), these values of T are separated in intervals of 10 ms.
+
+								</td>
+								<td>
+									Hundred successive ball positions of trajectory as,<br> 
+									Predicted Trajectory:<br>(x11,y11,z11,t11),(x12,y12,z12,t12),..(x100,y100,z100,t100)<br> where,<br>
+									If t11 = T + 10 milliseconds <br> then t100 = T + 1000 milliseconds <br> ( T represents current time ), these values of T are separated by intervals of 10 ms.
+
+								</td>
+							</tr>
+						</table>
+						<div style="width: 100%; float:left; text-align: justify;">
+							<p style="font-size: 20px; ">
+								<b>Note: </b>
+								These predicted trajectories need not to be perfectly accurate by simply observing first 10 inputs, but initially it only gives rough prediction about where ball might go, i.e. it gives very rough predicted trajectory, that prediction of trajectory improves as ball moves forward.
+							</p>
+						</div>
+					</section>
+					<section>
+						<h3>Trajectory Prediction</h3>
+						<h4>Trajectory Prediction Algorithm</h4>
+						<div >
+							<div style="width: 50%; float: left;">
+								<img style="border: none;" src="images\trajectory prediction\lstm.PNG"> 
+							</div>
+							<div style="width: 50%; float: left; font-size: 20px; text-align: justify;">
+								<p style="font-size: 25px; text-align: center;"><b>LSTM (Long Short Term Memory Block)</b></p>
+								<p>This is consider as tinest block of long recurrent neural network, these lstm blocks are good at preserving memory, there design are made in such a way that things learn from initial part of trajectory  can be used in final part of trajectory. As, our network is very long consisting 10 inputs and 100 outputs, use of lstm block becomes very useful. We will not dive into details about exactly how lstm block preserves the memory, Also, programmatically implementation also made easy by neural network libraries like keras, tensorflow.</p>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h3>Trajectory Prediction</h3>
+						<h4>Trajectory Prediction Algorithm</h4>
+						<div >
+							<div style="width: 50%; float: left; font-size: 20px;">
+								<img style="border: none;" src="images\trajectory prediction\rnn_single_layer.PNG"> 
+								<p>APT: Actual position of ball</p>
+								<p>PPT: Prediced position of ball</p>
+							</div>
+							<div style="width: 50%; float: left; font-size: 20px; text-align: justify;">
+								<p style="font-size: 25px; text-align: center;"><b>Single Layer of RNN</b></p>
+								<p>Single layer of complete flow of RNN take 10 inputs and predicts 1 output. These 10 inputs can be made up of following combinations,</p>
+								<ol>
+									<li>Only actual positions of ball</li>
+									<li>Actual positions of ball + Predicted positions of ball</li>
+									<li>Only predicted positions of ball</li>
+								</ol>
+								<p style="font-size: 18px;"><b>PPT T=single_layer_rnn{APT/PPT(T-10) to APT/PPT(T-1)}</b></p>
+								<p>i.e. it takes ( T – 100 to T ) as input and predicts ball position at ( T + 10 ).</p>
+							</div>
+						</div>
+					</section>
+					<section >
+						<h3>Trajectory Prediction</h3>
+						<h4>Trajectory Prediction Algorithm</h4>
+						<div >
+							<div style="width: 35%; float: left;">
+								<img style=" width: 100%; border: none;" src="images\trajectory prediction\rnn_complete_flow.PNG"> 
+							</div>
+							<div style="width: 65%; float: left; font-size: 18px; text-align: justify;">
+								<p style="font-size: 25px; text-align: center;"><b>Complete Flow of RNN</b></p>
+								<table>
+									<tr>
+										<th>
+											INPUT
+										</th>
+										<th>
+											OUTPUT
+										</th>
+									</tr>
+									<tr>
+										<td>
+											APT1 to APT 10
+										</td>
+										<td>
+											PPT 11
+										</td>
+									</tr>
+									<tr>
+										<td>
+											APT2 to APT 10 + PPT 11
+										</td>
+										<td>
+											PPT 12
+										</td>
+									</tr>
+									<tr>
+										<td>
+											APT3 to APT 10+PPT 11 to PPT 12
+										</td>
+										<td>
+											PPT 13
+										</td>
+									</tr>
+									<tr>
+										<td>
+											APT4 to APT 10+PPT 11 to PPT 13
+										</td>
+										<td>
+											PPT 14
+										</td>
+									</tr>
+									<tr>
+										<td>
+											--------------------------------
+										</td>
+										<td>
+											-----------
+										</td>
+									</tr>
+									<tr>
+										<td>
+											PPT 11 to PPT 20
+										</td>
+										<td>
+											PPT 21
+										</td>
+									</tr>
+									<tr>
+										<td>
+											PPT 12 to PPT 21
+										</td>
+										<td>
+											PPT 22
+										</td>
+									</tr>
+									<tr>
+										<td>
+											---------------------------------
+										</td>
+										<td>
+											----------
+										</td>
+									</tr>
+									<tr>
+										<td>
+											PPT 90 to PPT 99
+										</td>
+										<td>
+											PPT 100
+										</td>
+									</tr>
+
+								</table>
+								<p style="margin-left: 5%;"><b>Note:</b> It comprised of maximum 90 layers of single layer RNN stack onto each other</p>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section data-state="demo_display_state">	
+				</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/highlight/highlight.js' },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+			Reveal.addEventListener( 'demo_display_state', function() {
+				let my = document.getElementsByTagName("canvas")[0];
+				my.style.visibility =  "visible";
+				//my.style.visibility =  "hidden";
+
+				let myImg = document.getElementsByClassName("demo_img");
+				for(let i=0; i< myImg.length; i++){
+					myImg[i].style.visibility = "visible";
+				}
+			}, false );
+			
+			function hide_it(){
+				let my = document.getElementsByTagName("canvas")[0];
+				//my.style.visibility =  "visible";
+				my.style.visibility =  "hidden";
+				console.log("non demo display state is called")
+				let myImg = document.getElementsByClassName("demo_img");
+				
+				for(let i=0; i< myImg.length; i++){
+					myImg[i].style.visibility = "hidden";
+				}
+			};
+
+			Reveal.addEventListener('non_demo_display_state1', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state2', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state3', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state4', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state5', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state6', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state7', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state8', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state9', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state10', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state11', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state12', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state13', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state14', function(){
+				hide_it();
+			}, false);
+			Reveal.addEventListener('non_demo_display_state15', function(){
+				hide_it();
+			}, false);
+
+		</script>
+	</body>
+</html>
