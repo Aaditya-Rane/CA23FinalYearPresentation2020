@@ -264,7 +264,7 @@ function setup() {
     img4 = createImg();
     img4.attribute("class", "demo_img");
 
-    h1 = createElement('h1', 'PRESS A : FOR NEXT TRAJECTORY | PRESS B : FOR PREVIOUS TRAJECTORY');
+    h1 = createElement('h1', 'PRESS A : FOR NEXT TRAJECTORY | PRESS S : FOR PREVIOUS TRAJECTORY');
     h1.attribute("class", "demo_img");
 
     myCnv.mouseMoved(mousedragged);
